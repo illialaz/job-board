@@ -21,7 +21,9 @@ model User {
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
-
+  job           Job[]
+  company       Boolean @default(false)
+  applications  Application[]
 }
 
 model VerificationToken {
@@ -61,3 +63,24 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Job {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  title        String?
+  description  String?
+  salary       String?
+  location     String?
+  published    Boolean @default(true)
+  author       User     @relation(fields: [authorId], references: [id])
+  authorId     String
+  applications Application[]
+}
+
+model Application {
+  id          Int    @id @default(autoincrement())
+  coverletter String
+  job         Job    @relation(fields: [jobId], references: [id])
+  jobId       Int
+  author      User   @relation(fields: [authorId], references: [id])
+  authorId    String
+}
